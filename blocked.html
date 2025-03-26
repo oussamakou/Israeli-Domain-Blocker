@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' https://www.gofundme.com; style-src 'self' 'unsafe-inline';">
+    <title>Access Blocked - Stand With Palestine</title>
+    <style>
+        :root {
+            --primary-dark: #1a1a1a;
+            --text-color: #ffffff;
+            --accent-red: #ff4444;
+            --accent-green: #4CAF50;
+            --border-radius: 12px;
+            --transition: all 0.3s ease;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background-color: var(--primary-dark);
+            color: var(--text-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-image: 
+                linear-gradient(45deg, 
+                    transparent 0%, transparent 45%, 
+                    rgba(255, 255, 255, 0.1) 45%, rgba(255, 255, 255, 0.1) 55%, 
+                    transparent 55%, transparent 100%),
+                linear-gradient(-45deg, 
+                    transparent 0%, transparent 45%, 
+                    rgba(255, 255, 255, 0.1) 45%, rgba(255, 255, 255, 0.1) 55%, 
+                    transparent 55%, transparent 100%);
+            background-size: 20px 20px;
+        }
+
+        .container {
+            max-width: 600px;
+            padding: 40px;
+            text-align: center;
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: var(--border-radius);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(10px);
+            margin: 20px;
+        }
+
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            color: var(--accent-red);
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        p {
+            font-size: 1.2em;
+            line-height: 1.6;
+            margin-bottom: 30px;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .redirect-message {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 15px;
+            border-radius: var(--border-radius);
+            margin: 20px 0;
+        }
+
+        .countdown {
+            font-size: 2em;
+            font-weight: bold;
+            color: var(--accent-green);
+            margin: 20px 0;
+        }
+
+        .loading-bar {
+            width: 100%;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 2px;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+
+        .loading-bar-fill {
+            width: 0%;
+            height: 100%;
+            background: var(--accent-green);
+            border-radius: 2px;
+            transition: width 5s linear;
+        }
+
+        .info {
+            font-size: 0.9em;
+            color: rgba(255, 255, 255, 0.7);
+            margin-top: 30px;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Access Blocked</h1>
+        <p>This domain has been blocked as part of our stand against occupation.</p>
+        <div class="redirect-message">
+            You will be redirected to support Palestinian families in need
+            <div class="countdown" id="countdown">5</div>
+            <div class="loading-bar">
+                <div class="loading-bar-fill" id="loading-bar"></div>
+            </div>
+        </div>
+        <p class="info">Your visit to this blocked domain has been logged. Consider making a difference by supporting humanitarian aid.</p>
+    </div>
+
+    <script src="blocked.js"></script>
+</body>
+</html>

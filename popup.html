@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Israeli Domain Blocker</title>
+    <style>
+        :root {
+            --primary-black: #000000;
+            --primary-green: #008B45;
+            --primary-red: #FF0000;
+            --text-color: #ffffff;
+            --border-radius: 8px;
+            --transition: all 0.3s ease;
+            --toast-bg: rgba(0, 0, 0, 0.9);
+        }
+
+        body {
+            width: 350px;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+            overflow-y: auto;
+            min-height: 500px;
+            position: relative;
+            background-color: #1a1a1a;
+            background-image: 
+                /* Keffiyeh pattern */
+                linear-gradient(45deg, 
+                    transparent 0%, transparent 45%, 
+                    rgba(255, 255, 255, 0.1) 45%, rgba(255, 255, 255, 0.1) 55%, 
+                    transparent 55%, transparent 100%),
+                linear-gradient(-45deg, 
+                    transparent 0%, transparent 45%, 
+                    rgba(255, 255, 255, 0.1) 45%, rgba(255, 255, 255, 0.1) 55%, 
+                    transparent 55%, transparent 100%);
+            background-size: 20px 20px, 20px 20px;
+            background-position: center;
+        }
+
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, 
+                rgba(255, 0, 0, 0.1), 
+                rgba(0, 0, 0, 0.2));
+            pointer-events: none;
+        }
+
+        /* Remove the red triangle */
+        body::after {
+            display: none;
+        }
+
+        h1, h2, h3, .input-group, ul {
+            position: relative;
+            z-index: 2;
+        }
+
+        h1 {
+            font-size: 24px;
+            text-align: center;
+            margin-bottom: 5px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        h2 {
+            font-size: 16px;
+            text-align: center;
+            margin-bottom: 20px;
+            opacity: 0.9;
+        }
+
+        h3 {
+            font-size: 14px;
+            margin: 15px 0 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .input-group {
+            margin: 15px 0;
+            display: flex;
+            gap: 8px;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateY(-10px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        input[type="text"] {
+            flex-grow: 1;
+            padding: 10px;
+            border: none;
+            border-radius: var(--border-radius);
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-color);
+            font-size: 14px;
+            transition: var(--transition);
+            backdrop-filter: blur(5px);
+        }
+
+        input[type="text"]::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        input[type="text"]:focus {
+            outline: none;
+            background: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.1);
+        }
+
+        button {
+            padding: 10px 15px;
+            background: var(--primary-black);
+            color: var(--text-color);
+            border: none;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-weight: 500;
+            transition: var(--transition);
+            text-transform: uppercase;
+            font-size: 12px;
+            letter-spacing: 0.5px;
+        }
+
+        button:hover {
+            background: #333;
+            transform: translateY(-1px);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+            margin: 10px 0;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        li {
+            background: rgba(0, 0, 0, 0.2);
+            margin: 8px 0;
+            padding: 10px;
+            border-radius: var(--border-radius);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            animation: fadeIn 0.3s ease;
+            transition: var(--transition);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        li:hover {
+            background: rgba(0, 0, 0, 0.3);
+        }
+
+        .remove-button {
+            background: rgba(255, 0, 0, 0.3);
+            padding: 5px 10px;
+            font-size: 11px;
+        }
+
+        .remove-button:hover {
+            background: rgba(255, 0, 0, 0.5);
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(0, 0, 0, 0.5);
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .tab {
+            flex: 1;
+            padding: 10px;
+            text-align: center;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .tab.active {
+            background: rgba(0, 0, 0, 0.4);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .domain-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: var(--border-radius);
+            margin-bottom: 8px;
+            transition: var(--transition);
+        }
+
+        .domain-item:hover {
+            background: rgba(0, 0, 0, 0.3);
+        }
+
+        .domain-text {
+            flex-grow: 1;
+            font-size: 14px;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 5px;
+        }
+
+        .icon-button {
+            background: none;
+            border: none;
+            padding: 5px;
+            cursor: pointer;
+            opacity: 0.7;
+            transition: var(--transition);
+            font-size: 16px;
+        }
+
+        .icon-button:hover {
+            opacity: 1;
+            transform: scale(1.1);
+        }
+
+        .edit-button {
+            color: #4CAF50;
+        }
+
+        .delete-button {
+            color: #f44336;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--toast-bg);
+            color: white;
+            padding: 12px 24px;
+            border-radius: var(--border-radius);
+            z-index: 1000;
+            animation: slideUp 0.3s ease;
+        }
+
+        @keyframes slideUp {
+            from { transform: translate(-50%, 100%); }
+            to { transform: translate(-50%, 0); }
+        }
+
+        .bug-report {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.6);
+            padding: 10px;
+            border-radius: 50%;
+            cursor: pointer;
+            z-index: 100;
+            transition: var(--transition);
+        }
+
+        .bug-report:hover {
+            background: rgba(0, 0, 0, 0.8);
+            transform: scale(1.1);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, #1a1a1a, #2a2a2a);
+            padding: 20px;
+            border-radius: var(--border-radius);
+            width: 80%;
+            max-width: 300px;
+            position: relative;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            font-size: 20px;
+        }
+
+        textarea {
+            width: 100%;
+            min-height: 100px;
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: var(--border-radius);
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: white;
+            resize: vertical;
+        }
+
+        .counter {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.6);
+            text-align: right;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Block Israeli Domains</h1>
+    <h2>Why? Cuz F*** 'em.</h2>
+    
+    <div class="tabs">
+        <div class="tab active" data-tab="blocked">Blocked</div>
+        <div class="tab" data-tab="whitelist">Whitelist</div>
+    </div>
+
+    <div class="tab-content active" id="blocked-content">
+        <div class="input-group">
+            <input type="text" id="domain-input" placeholder="Enter domain to block...">
+            <button id="blockButton">Block</button>
+        </div>
+        
+        <h3>Blocked Domains</h3>
+        <div id="domain-list"></div>
+    </div>
+
+    <div class="tab-content" id="whitelist-content">
+        <div class="input-group">
+            <input type="text" id="whitelist-input" placeholder="Enter domain to whitelist...">
+            <button id="add-whitelist-btn">Whitelist</button>
+        </div>
+        
+        <h3>Whitelisted Domains</h3>
+        <div id="whitelist"></div>
+    </div>
+
+    <div class="bug-report" title="Report a Bug">
+        Report a Bug
+    </div>
+
+    <div class="modal" id="bug-modal">
+        <div class="modal-content">
+            <button class="modal-close">&times;</button>
+            <h3>Report a Bug</h3>
+            <textarea id="bug-description" placeholder="Describe the issue you're experiencing..." maxlength="500"></textarea>
+            <div class="counter"><span id="char-count">0</span>/500</div>
+            <button id="submit-bug">Submit Report</button>
+        </div>
+    </div>
+
+    <script src="popup.js"></script>
+</body>
+</html>
